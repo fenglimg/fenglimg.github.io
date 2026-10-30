@@ -1,0 +1,4 @@
+{%- assign rt_speed = site.reading_speed | default: 400 -%}
+{%- assign rt_chars = include.content | strip_html | strip_newlines | remove: " " | size -%}
+{%- assign rt_min = rt_chars | divided_by: rt_speed | plus: 1 -%}
+{{- rt_min -}}

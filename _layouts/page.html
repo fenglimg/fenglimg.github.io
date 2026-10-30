@@ -1,0 +1,18 @@
+---
+layout: default
+---
+<div class="container">
+  <div class="bento">
+    <header class="card span-4 tone-bg tone-{{ page.tone | default: 3 }} page-hero" style="min-height: 200px">
+      <h1>{{ page.title | escape }}</h1>
+      {%- if page.description -%}<p>{{ page.description }}</p>{%- endif -%}
+    </header>
+  </div>
+  <div class="post-body-grid" style="grid-template-columns: minmax(0, 1fr)">
+    <article class="card article-card">
+      <div class="markdown-body" data-post-body>
+        {{ content }}
+      </div>
+    </article>
+  </div>
+</div>

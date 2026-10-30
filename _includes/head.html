@@ -1,0 +1,20 @@
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" content="#f4f4f5" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#09090b" media="(prefers-color-scheme: dark)">
+  {%- seo -%}
+  {%- feed_meta -%}
+  <link rel="icon" href="{{ site.author.avatar | default: '/assets/img/avatar.svg' | relative_url }}">
+  <script>
+    /* 在首帧前写入主题，避免闪烁 */
+    (function () {
+      var t = "auto";
+      try { t = localStorage.getItem("theme") || "auto"; } catch (e) {}
+      document.documentElement.setAttribute("data-theme", t);
+    })();
+  </script>
+  <link rel="stylesheet" href="{{ '/assets/css/bento.css' | relative_url }}">
+  <script src="{{ '/assets/js/main.js' | relative_url }}" defer></script>
+</head>

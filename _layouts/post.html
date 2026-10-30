@@ -1,0 +1,110 @@
+---
+layout: default
+---
+{%- assign char_count = content | strip_html | strip_newlines | remove: " " | size -%}
+{%- assign auto_tone = page.date | date: "%-d" | modulo: 4 -%}
+{%- assign tone = page.tone | default: auto_tone -%}
+<div class="container">
+  <div class="bento">
+    <header class="card span-3 row-2 tone-bg tone-{{ tone }} post-hero">
+      <a class="crumb" href="{{ '/archive/' | relative_url }}">{% include icon.html name="chevron-left" %}全部文章</a>
+      {%- if page.tags.size > 0 -%}
+      <div class="pill-list">
+        {%- for tag in page.tags -%}
+        <a class="pill" href="{{ '/tags/' | relative_url }}#{{ tag | slugify }}">#{{ tag }}</a>
+        {%- endfor -%}
+      </div>
+      {%- endif -%}
+      <h1 class="post-title">{{ page.title | escape }}</h1>
+      {%- if page.description -%}<p class="post-desc">{{ page.description }}</p>{%- endif -%}
+    </header>
+
+    <div class="card stat-card">
+      <span class="chip-icon tone-0">{% include icon.html name="calendar" %}</span>
+      <div>
+        <span class="stat-number" style="font-size: 32px">{{ page.date | date: "%m.%d" }}</span>
+        <p class="stat-caption">
+          发布于 {{ page.date | date: "%Y" }} 年
+          {%- if page.updated -%}<br>更新于 {{ page.updated | date: "%Y-%m-%d" }}{%- endif -%}
+        </p>
+      </div>
+    </div>
+
+    <div class="card stat-card">
+      <span class="chip-icon tone-1">{% include icon.html name="clock" %}</span>
+      <div>
+        <span class="stat-number" style="font-size: 32px">{% include reading-time.html content=content %}<span class="stat-unit">分钟</span></span>
+        <p class="stat-caption">约 {{ char_count }} 字</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="post-body-grid">
+    <article class="card article-card">
+      <div class="markdown-body" data-post-body>
+        {{ content }}
+      </div>
+    </article>
+
+    <aside class="post-aside" aria-label="文章目录与操作">
+      <div class="card aside-card" data-toc-section hidden>
+        <h2 class="aside-title">目录</h2>
+        <nav class="toc" data-toc aria-label="文章目录"></nav>
+      </div>
+      <div class="card aside-card">
+        <h2 class="aside-title">作者</h2>
+        <div style="display: flex; align-items: center; gap: 12px">
+          <img class="avatar" src="{{ site.author.avatar | relative_url }}" alt="" width="40" height="40">
+          <div>
+            <strong>{{ site.author.name }}</strong>
+            <div class="stat-caption" style="margin: 0">@{{ site.author.username }}</div>
+          </div>
+        </div>
+        <div class="aside-actions" style="margin-top: 16px">
+          <button class="btn btn-secondary" type="button" data-copy-link="{{ page.url | absolute_url }}">{% include icon.html name="link" %}复制链接</button>
+          <button class="btn btn-secondary" type="button" data-back-to-top>{% include icon.html name="arrow-up" %}顶部</button>
+        </div>
+        {%- if site.repository and site.repository != "" -%}
+        <a class="stat-caption" style="display: inline-flex; gap: 6px; align-items: center; margin-top: 12px" href="https://github.com/{{ site.repository }}/edit/{{ site.branch | default: 'main' }}/{{ page.path }}">{% include icon.html name="pencil" %}在 GitHub 上编辑</a>
+        {%- endif -%}
+      </div>
+    </aside>
+  </div>
+
+  {%- if page.previous or page.next -%}
+  <nav class="bento post-nav" aria-label="上一篇和下一篇" style="grid-auto-rows: auto">
+    {%- if page.previous -%}
+    <div class="card span-2 is-interactive">
+      <span class="card-label" style="align-self: flex-start">{% include icon.html name="chevron-left" %}上一篇</span>
+      <a class="stretched card-title" style="margin: 12px 0 0; color: inherit" href="{{ page.previous.url | relative_url }}">{{ page.previous.title | escape }}</a>
+    </div>
+    {%- endif -%}
+    {%- if page.next -%}
+    <div class="card span-2 is-interactive next">
+      <span class="card-label">下一篇{% include icon.html name="chevron-right" %}</span>
+      <a class="stretched card-title" style="margin: 12px 0 0; color: inherit" href="{{ page.next.url | relative_url }}">{{ page.next.title | escape }}</a>
+    </div>
+    {%- endif -%}
+  </nav>
+  {%- endif -%}
+
+  {%- if site.giscus.repo != "" and site.giscus.repo_id != "" and page.comments != false -%}
+  <section class="card comments-card" aria-label="评论">
+    <script src="https://giscus.app/client.js"
+      data-repo="{{ site.giscus.repo }}"
+      data-repo-id="{{ site.giscus.repo_id }}"
+      data-category="{{ site.giscus.category }}"
+      data-category-id="{{ site.giscus.category_id }}"
+      data-mapping="pathname"
+      data-strict="0"
+      data-reactions-enabled="1"
+      data-emit-metadata="0"
+      data-input-position="top"
+      data-theme="preferred_color_scheme"
+      data-lang="zh-CN"
+      data-loading="lazy"
+      crossorigin="anonymous"
+      async></script>
+  </section>
+  {%- endif -%}
+</div>

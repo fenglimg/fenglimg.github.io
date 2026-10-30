@@ -1,0 +1,19 @@
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-card">
+      <div class="footer-brand">
+        <img class="avatar" src="{{ site.author.avatar | relative_url }}" alt="" width="40" height="40">
+        <div>
+          <strong>{{ site.title }}</strong>
+          <p>&copy; {{ site.time | date: "%Y" }} {{ site.author.name }} · 由 Jekyll 构建，部署于 GitHub Pages</p>
+        </div>
+      </div>
+      <ul class="footer-links">
+        {%- for item in site.nav -%}
+        <li><a href="{{ item.url | relative_url }}">{{ item.title }}</a></li>
+        {%- endfor -%}
+        <li><a href="{{ '/feed.xml' | relative_url }}">RSS</a></li>
+      </ul>
+    </div>
+  </div>
+</footer>

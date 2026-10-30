@@ -1,0 +1,30 @@
+{%- comment -%}
+  文章卡片。参数：post、size（lg / wide / full / tall / sm）、tone（0–3）
+{%- endcomment -%}
+{%- assign p = include.post -%}
+{%- assign size = include.size | default: "sm" -%}
+{%- assign tone = include.tone | default: 0 -%}
+{%- assign icons = "note,code,sparkle-fill,flame" | split: "," -%}
+{%- capture span -%}
+  {%- case size -%}
+    {%- when "lg" -%}span-2 row-2 tone-bg tone-{{ tone }}
+    {%- when "wide" -%}span-2
+    {%- when "full" -%}span-4
+    {%- when "tall" -%}row-2
+  {%- endcase -%}
+{%- endcapture -%}
+<article class="card post-tile is-interactive tile-{{ size }} {{ span }}" data-filter-item data-filter-text="{{ p.title | escape }} {{ p.tags | join: ' ' | escape }}">
+  <div class="card-head">
+    {%- assign icon_name = icons[tone] -%}
+    <span class="chip-icon tone-{{ tone }}">{% include icon.html name=icon_name %}</span>
+    <time class="tile-date" datetime="{{ p.date | date_to_xmlschema }}">{{ p.date | date: "%Y.%m.%d" }}</time>
+  </div>
+  <h3 class="card-title"><a class="stretched" href="{{ p.url | relative_url }}">{{ p.title | escape }}</a></h3>
+  {%- assign desc = p.description | default: p.excerpt | strip_html | strip_newlines | truncate: 140 -%}
+  {%- if desc != "" -%}<p class="tile-desc">{{ desc }}</p>{%- endif -%}
+  <div class="tile-meta">
+    {%- if p.tags.size > 0 -%}<span>{% include icon.html name="hash" %}{{ p.tags | first }}</span>{%- endif -%}
+    <span>{% include icon.html name="clock" %}{% include reading-time.html content=p.content %} 分钟</span>
+    <span class="card-arrow">{% include icon.html name="arrow-up-right" %}</span>
+  </div>
+</article>

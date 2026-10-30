@@ -1,0 +1,35 @@
+<a class="skip-link" href="#main">跳到正文</a>
+<header class="site-header">
+  <div class="container">
+    <div class="header-bar">
+      <a class="brand" href="{{ '/' | relative_url }}">
+        <img class="avatar" src="{{ site.author.avatar | relative_url }}" alt="" width="32" height="32">
+        <span class="brand-title">{{ site.title }}</span>
+      </a>
+
+      <nav class="nav-pills" aria-label="主导航">
+        {%- for item in site.nav -%}
+          {%- assign current = false -%}
+          {%- if item.url == "/" -%}
+            {%- if page.url == "/" or page.url == "/index.html" -%}{%- assign current = true -%}{%- endif -%}
+          {%- elsif page.url contains item.url -%}
+            {%- assign current = true -%}
+          {%- endif -%}
+          {%- if item.url == "/archive/" and page.layout == "post" -%}{%- assign current = true -%}{%- endif -%}
+          <a class="nav-pill" href="{{ item.url | relative_url }}"{% if current %} aria-current="page"{% endif %}>{{ item.title }}</a>
+        {%- endfor -%}
+      </nav>
+
+      <div class="header-actions">
+        <a class="icon-btn" href="{{ '/search/' | relative_url }}" aria-label="搜索（快捷键 /）" title="搜索（快捷键 /）">
+          {% include icon.html name="search" %}
+        </a>
+        <button class="icon-btn" type="button" data-theme-toggle aria-label="切换主题" title="切换主题">
+          <span class="theme-icon theme-icon-auto">{% include icon.html name="device-desktop" %}</span>
+          <span class="theme-icon theme-icon-light">{% include icon.html name="sun" %}</span>
+          <span class="theme-icon theme-icon-dark">{% include icon.html name="moon" %}</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</header>

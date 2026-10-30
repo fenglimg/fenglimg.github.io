@@ -1,0 +1,27 @@
+---
+layout: default
+title: 页面不存在
+permalink: /404.html
+sitemap: false
+---
+<div class="container">
+  <div class="bento">
+    <section class="card span-2 row-2 tone-bg tone-1 page-hero">
+      <span class="stat-number" style="font-size: 96px">404</span>
+      <h1>页面不存在</h1>
+      <p>你要找的页面可能已被移动、改名，或者从来就没有存在过。</p>
+    </section>
+    <a class="card span-2 is-interactive" href="{{ '/' | relative_url }}" style="color: inherit">
+      <span class="chip-icon tone-0">{% include icon.html name="home" %}</span>
+      <p class="feature-title" style="margin: auto 0 0">返回首页</p>
+    </a>
+    <a class="card is-interactive" href="{{ '/archive/' | relative_url }}" style="color: inherit">
+      <span class="chip-icon tone-2">{% include icon.html name="archive" %}</span>
+      <p class="card-title" style="margin: auto 0 0">全部文章</p>
+    </a>
+    <a class="card is-interactive" href="{{ '/search/' | relative_url }}" style="color: inherit">
+      <span class="chip-icon tone-3">{% include icon.html name="search" %}</span>
+      <p class="card-title" style="margin: auto 0 0">搜索</p>
+    </a>
+  </div>
+</div>
