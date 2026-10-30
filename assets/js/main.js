@@ -476,8 +476,24 @@ layout: null
       .catch(function () { status.textContent = "搜索索引加载失败，请稍后再试。"; });
   }
 
+  /* ---------- 文章内嵌演示：点击封面后才加载 iframe ---------- */
+  function initDemoEmbeds() {
+    $$("[data-demo-src]").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        var frame = document.createElement("iframe");
+        frame.src = btn.getAttribute("data-demo-src");
+        frame.title = btn.getAttribute("data-demo-title") || "交互演示";
+        frame.setAttribute("allow", "fullscreen");
+        frame.setAttribute("allowfullscreen", "");
+        btn.replaceWith(frame);
+        frame.focus();
+      });
+    });
+  }
+
   document.addEventListener("DOMContentLoaded", function () {
     initStyle();
+    initDemoEmbeds();
     initTheme();
     initShortcuts();
     var body = $("[data-post-body]");
