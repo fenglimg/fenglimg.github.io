@@ -1,0 +1,60 @@
+<div class="container-lg" data-filter-scope>
+  <header class="page-head">
+    <div>
+      <h1 class="page-title">全部文章</h1>
+      <p class="page-subtitle">共 {{ site.posts | size }} 篇，按时间倒序排列</p>
+    </div>
+    <div class="page-filter">
+      <label class="sr-only" for="archive-filter">筛选文章</label>
+      <input class="form-control" id="archive-filter" type="search" placeholder="按标题或标签筛选…" data-filter-input autocomplete="off">
+    </div>
+  </header>
+
+  {%- if site.posts.size == 0 -%}
+  <div class="Box blankslate">
+    {% include icon.html name="repo" %}
+    <p>还没有文章。</p>
+  </div>
+  {%- endif -%}
+
+  <div class="timeline">
+    {%- assign groups = site.posts | group_by_exp: "p", "p.date | date: '%Y 年 %m 月'" -%}
+    {%- for g in groups -%}
+    <section class="timeline-group" data-filter-group>
+      <h2 class="timeline-heading">{% include icon.html name="git-commit" %}{{ g.name }} · {{ g.items | size }} 篇</h2>
+      <ol class="Box commit-list">
+        {%- for p in g.items -%}
+        <li class="commit-row" data-filter-item data-filter-text="{{ p.title | escape }} {{ p.tags | join: ' ' | escape }}">
+          <div class="commit-main">
+            <a class="commit-title" href="{{ p.url | relative_url }}">{{ p.title | escape }}</a>
+            <div class="commit-meta">
+              <img class="avatar" src="{{ site.author.avatar | relative_url }}" alt="" width="16" height="16">
+              <strong>{{ site.author.username }}</strong>
+              <span>发布于 <time datetime="{{ p.date | date_to_xmlschema }}">{{ p.date | date: "%Y-%m-%d" }}</time></span>
+            </div>
+          </div>
+          <div class="commit-side">
+            {%- if p.tags.size > 0 -%}
+            <div class="topic-list">
+              {%- for tag in p.tags limit: 2 -%}
+              <a class="topic-tag" href="{{ '/tags/' | relative_url }}#{{ tag | slugify }}">{{ tag }}</a>
+              {%- endfor -%}
+            </div>
+            {%- endif -%}
+            <span class="sha" title="发布日期">{{ p.date | date: "%m%d" }}</span>
+            <button class="btn-octicon" type="button" data-copy-link="{{ p.url | absolute_url }}" aria-label="复制《{{ p.title | escape }}》的链接" title="复制链接">
+              {% include icon.html name="copy" %}
+            </button>
+          </div>
+        </li>
+        {%- endfor -%}
+      </ol>
+    </section>
+    {%- endfor -%}
+  </div>
+
+  <div class="Box blankslate filter-empty" role="status">
+    {% include icon.html name="search" %}
+    <p>没有找到匹配的文章。</p>
+  </div>
+</div>

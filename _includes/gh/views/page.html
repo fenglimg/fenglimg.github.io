@@ -1,0 +1,19 @@
+<div class="container-lg">
+  <header class="page-head">
+    <div>
+      <h1 class="page-title">{{ page.title | escape }}</h1>
+      {%- if page.description -%}<p class="page-subtitle">{{ page.description }}</p>{%- endif -%}
+    </div>
+  </header>
+  <article class="Box post-box">
+    <div class="Box-header file-header">
+      <div class="file-header-name">
+        {% include icon.html name="file" %}
+        <span>{{ page.path | split: "/" | last }}</span>
+      </div>
+    </div>
+    <div class="markdown-body" data-post-body>
+      {{ content }}
+    </div>
+  </article>
+</div>

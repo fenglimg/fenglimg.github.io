@@ -1,0 +1,34 @@
+{%- assign a = site.author -%}
+<div class="profile-card">
+  <img class="avatar profile-avatar" src="{{ a.avatar | relative_url }}" alt="{{ a.name }} 的头像" width="296" height="296">
+  <h1 class="profile-names">
+    <span class="profile-name">{{ a.name }}</span>
+    <span class="profile-username">{{ a.username }}</span>
+  </h1>
+  <div class="profile-body">
+    {%- if a.bio -%}<p class="profile-bio">{{ a.bio }}</p>{%- endif -%}
+    <a class="btn btn-block" href="{{ '/feed.xml' | relative_url }}">
+      {% include icon.html name="rss" %}订阅 RSS
+    </a>
+    <div class="profile-stats">
+      {% include icon.html name="repo" %}
+      <strong>{{ site.posts | size }}</strong> 篇文章
+      <span aria-hidden="true">·</span>
+      <strong>{{ site.tags | size }}</strong> 个标签
+    </div>
+    <ul class="profile-details">
+      {%- if a.location and a.location != "" -%}
+      <li>{% include icon.html name="location" %}<span>{{ a.location }}</span></li>
+      {%- endif -%}
+      {%- if a.email and a.email != "" -%}
+      <li>{% include icon.html name="mail" %}<a href="mailto:{{ a.email }}">{{ a.email }}</a></li>
+      {%- endif -%}
+      {%- if a.website and a.website != "" -%}
+      <li>{% include icon.html name="link" %}<a href="{{ a.website }}" rel="me">{{ a.website | remove: "https://" | remove: "http://" }}</a></li>
+      {%- endif -%}
+      {%- if site.github_username and site.github_username != "" -%}
+      <li>{% include icon.html name="mark-github" %}<a href="https://github.com/{{ site.github_username }}" rel="me">{{ site.github_username }}</a></li>
+      {%- endif -%}
+    </ul>
+  </div>
+</div>

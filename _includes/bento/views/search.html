@@ -1,0 +1,14 @@
+<div class="container">
+  <div class="bento" style="grid-auto-rows: auto">
+    <section class="card span-4 filter-card">
+      <h1 class="feature-title" style="margin: 0; font-size: 30px">搜索</h1>
+      <label class="sr-only" for="search-q">搜索关键词</label>
+      <div class="input-icon">
+        {% include icon.html name="search" %}
+        <input class="input" id="search-q" type="search" placeholder="在标题、标签和正文中搜索…（快捷键 /）" autocomplete="off" data-search-input data-search-index="{{ '/search.json' | relative_url }}">
+      </div>
+      <p class="search-status" data-search-status role="status" aria-live="polite"></p>
+    </section>
+  </div>
+  <div class="bento" data-search-results></div>
+</div>

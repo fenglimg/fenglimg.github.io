@@ -2,10 +2,6 @@
 <html lang="{{ page.lang | default: site.lang | default: 'zh-CN' }}">
 {%- include head.html -%}
 <body>
-  {%- include header.html -%}
-  <main id="main" class="site-main">
-    {{ content }}
-  </main>
-  {%- include footer.html -%}
+  {%- include shell.html -%}
 </body>
 </html>

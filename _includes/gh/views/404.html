@@ -1,0 +1,11 @@
+<div class="container-lg">
+  <div class="Box blankslate" style="padding: 64px 32px;">
+    {% include icon.html name="alert" %}
+    <h1 class="page-title">404 · 页面不存在</h1>
+    <p>你要找的页面可能已经被移动、改名，或者从来就没有存在过。</p>
+    <p>
+      <a class="btn btn-primary" href="{{ '/' | relative_url }}">{% include icon.html name="home" %}返回首页</a>
+      <a class="btn" href="{{ '/search/' | relative_url }}">{% include icon.html name="search" %}搜索文章</a>
+    </p>
+  </div>
+</div>

@@ -1,0 +1,51 @@
+{%- assign tags = site.tags | sort -%}
+{%- comment -%} 按文章数从多到少排序：拼出「补码|标签名」字符串再排序 {%- endcomment -%}
+{%- assign keys = "" | split: "" -%}
+{%- for tag in tags -%}
+  {%- assign k = 10000 | minus: tag[1].size | append: "|" | append: tag[0] -%}
+  {%- assign keys = keys | push: k -%}
+{%- endfor -%}
+{%- assign keys = keys | sort -%}
+<div class="container">
+  <div class="bento">
+    <header class="card span-2 tone-bg tone-3 page-hero">
+      <h1>标签</h1>
+      <p>共 {{ tags | size }} 个标签，{{ site.posts | size }} 篇文章</p>
+    </header>
+    <section class="card span-2 tag-cloud-card" aria-label="全部标签">
+      <div class="pill-list">
+        {%- for tag in tags -%}
+        <a class="pill" href="#{{ tag[0] | slugify }}">#{{ tag[0] }}<span class="count">{{ tag[1] | size }}</span></a>
+        {%- endfor -%}
+      </div>
+    </section>
+  </div>
+
+  <div class="bento">
+    {%- assign n = keys | size -%}
+    {%- for k in keys -%}
+      {%- assign name = k | split: "|" | last -%}
+      {%- assign posts = site.tags[name] -%}
+      {%- include bento/bento-size.html i=forloop.index0 n=n -%}
+      {%- assign t = forloop.index0 | modulo: 4 -%}
+      {%- capture cls -%}
+        {%- case bento_size -%}
+          {%- when "lg" -%}span-2 row-2 tone-bg tone-{{ t }}
+          {%- when "wide" -%}span-2
+          {%- when "full" -%}span-4
+        {%- endcase -%}
+      {%- endcapture -%}
+    <section class="card tag-tile {{ cls }}" id="{{ name | slugify }}">
+      <div class="card-head" style="margin-bottom: 8px">
+        <h2 class="tag-name">#{{ name }}</h2>
+        <span class="tag-count">{{ posts | size }}</span>
+      </div>
+      <ul class="tag-posts">
+        {%- for p in posts -%}
+        <li><a href="{{ p.url | relative_url }}">{{ p.title | escape }}</a></li>
+        {%- endfor -%}
+      </ul>
+    </section>
+    {%- endfor -%}
+  </div>
+</div>

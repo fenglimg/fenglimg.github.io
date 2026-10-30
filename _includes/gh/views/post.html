@@ -1,0 +1,112 @@
+{%- assign file_name = page.path | split: "/" | last -%}
+{%- assign char_count = content | strip_html | strip_newlines | remove: " " | size -%}
+<div class="container-xl">
+  <header class="post-header">
+    <nav class="breadcrumb" aria-label="面包屑">
+      {% include icon.html name="book" %}
+      <strong><a href="{{ '/' | relative_url }}">{{ site.author.username }}</a></strong>
+      <span aria-hidden="true">/</span>
+      <a href="{{ '/archive/' | relative_url }}">文章</a>
+    </nav>
+    <h1 class="post-title">{{ page.title | escape }}</h1>
+    <div class="post-meta">
+      <img class="avatar" src="{{ site.author.avatar | relative_url }}" alt="" width="20" height="20">
+      <strong>{{ site.author.name }}</strong>
+      <span>发布于 <time datetime="{{ page.date | date_to_xmlschema }}">{{ page.date | date: "%Y-%m-%d" }}</time></span>
+      {%- if page.updated -%}
+      <span class="dot" aria-hidden="true">·</span>
+      <span>更新于 <time datetime="{{ page.updated | date_to_xmlschema }}">{{ page.updated | date: "%Y-%m-%d" }}</time></span>
+      {%- endif -%}
+      <span class="dot" aria-hidden="true">·</span>
+      <span>{% include reading-time.html content=content %} 分钟阅读</span>
+    </div>
+    {%- if page.tags.size > 0 -%}
+    <div class="topic-list">
+      {%- for tag in page.tags -%}
+      <a class="topic-tag" href="{{ '/tags/' | relative_url }}#{{ tag | slugify }}">{{ tag }}</a>
+      {%- endfor -%}
+    </div>
+    {%- endif -%}
+  </header>
+
+  <div class="post-layout">
+    <article class="Box post-box">
+      <div class="Box-header file-header">
+        <div class="file-header-name">
+          {% include icon.html name="file" %}
+          <span>{{ file_name }}</span>
+        </div>
+        <div class="file-header-meta">
+          <span>{{ char_count }} 字</span>
+          {%- if site.repository and site.repository != "" -%}
+          <a class="btn-octicon" href="https://github.com/{{ site.repository }}/edit/{{ site.branch | default: 'main' }}/{{ page.path }}" aria-label="在 GitHub 上编辑这篇文章" title="在 GitHub 上编辑">
+            {% include icon.html name="pencil" %}
+          </a>
+          {%- endif -%}
+        </div>
+      </div>
+      <div class="markdown-body" data-post-body>
+        {{ content }}
+      </div>
+    </article>
+
+    <aside class="post-sidebar" aria-label="文章信息">
+      <div class="post-sidebar-inner">
+        <div class="sidebar-section" data-toc-section hidden>
+          <h2 class="sidebar-heading">目录</h2>
+          <nav class="toc" data-toc aria-label="文章目录"></nav>
+        </div>
+        <div class="sidebar-section">
+          <h2 class="sidebar-heading">关于本文</h2>
+          <ul class="sidebar-list">
+            <li>{% include icon.html name="calendar" %}{{ page.date | date: "%Y 年 %m 月 %d 日" }}</li>
+            <li>{% include icon.html name="clock" %}约 {% include reading-time.html content=content %} 分钟</li>
+            <li>{% include icon.html name="file" %}{{ char_count }} 字</li>
+          </ul>
+        </div>
+        <div class="sidebar-section">
+          <button class="btn btn-sm" type="button" data-back-to-top>{% include icon.html name="arrow-up" %}回到顶部</button>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <footer class="post-footer">
+    {%- if page.previous or page.next -%}
+    <nav class="post-nav" aria-label="上一篇和下一篇">
+      {%- if page.previous -%}
+      <a class="Box post-nav-link prev" href="{{ page.previous.url | relative_url }}">
+        <span class="post-nav-label">{% include icon.html name="chevron-left" %}上一篇</span>
+        <span class="post-nav-title">{{ page.previous.title | escape }}</span>
+      </a>
+      {%- endif -%}
+      {%- if page.next -%}
+      <a class="Box post-nav-link next" href="{{ page.next.url | relative_url }}">
+        <span class="post-nav-label">下一篇{% include icon.html name="chevron-right" %}</span>
+        <span class="post-nav-title">{{ page.next.title | escape }}</span>
+      </a>
+      {%- endif -%}
+    </nav>
+    {%- endif -%}
+
+    {%- if site.giscus.repo != "" and site.giscus.repo_id != "" and page.comments != false -%}
+    <section class="comments" aria-label="评论">
+      <script src="https://giscus.app/client.js"
+        data-repo="{{ site.giscus.repo }}"
+        data-repo-id="{{ site.giscus.repo_id }}"
+        data-category="{{ site.giscus.category }}"
+        data-category-id="{{ site.giscus.category_id }}"
+        data-mapping="pathname"
+        data-strict="0"
+        data-reactions-enabled="1"
+        data-emit-metadata="0"
+        data-input-position="top"
+        data-theme="preferred_color_scheme"
+        data-lang="zh-CN"
+        data-loading="lazy"
+        crossorigin="anonymous"
+        async></script>
+    </section>
+    {%- endif -%}
+  </footer>
+</div>

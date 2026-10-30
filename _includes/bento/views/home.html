@@ -1,0 +1,191 @@
+{%- assign a = site.author -%}
+{%- assign year = site.time | date: "%Y" -%}
+{%- assign year_count = 0 -%}
+{%- assign total_chars = 0 -%}
+{%- for p in site.posts -%}
+  {%- assign py = p.date | date: "%Y" -%}
+  {%- if py == year -%}{%- assign year_count = year_count | plus: 1 -%}{%- endif -%}
+  {%- assign c = p.content | strip_html | strip_newlines | remove: " " | size -%}
+  {%- assign total_chars = total_chars | plus: c -%}
+{%- endfor -%}
+{%- assign latest = site.posts | first -%}
+
+<div class="container">
+  <div class="bento">
+
+    <!-- 个人资料：2×2 渐变大卡 -->
+    <section class="card span-2 row-2 tone-bg tone-0 profile-card" aria-label="作者信息">
+      <div class="profile-top">
+        <img class="avatar" src="{{ a.avatar | relative_url }}" alt="{{ a.name }} 的头像" width="72" height="72">
+        <div>
+          <h1 class="profile-name">{{ a.name }}</h1>
+          <p class="profile-handle">@{{ a.username }}</p>
+        </div>
+      </div>
+      {%- if a.bio -%}<p class="profile-bio">{{ a.bio }}</p>{%- endif -%}
+      <div class="profile-meta">
+        {%- if a.location and a.location != "" -%}<span>{% include icon.html name="location" %}{{ a.location }}</span>{%- endif -%}
+        <span>{% include icon.html name="pencil" %}写了 {{ site.posts | size }} 篇文章</span>
+      </div>
+      <div class="profile-actions">
+        <a class="btn btn-light" href="{{ '/about/' | relative_url }}">{% include icon.html name="person" %}关于我</a>
+        <a class="btn btn-ghost" href="{{ '/feed.xml' | relative_url }}">{% include icon.html name="rss" %}订阅 RSS</a>
+      </div>
+    </section>
+
+    <!-- 最新文章：2×1 -->
+    {%- if latest -%}
+    <article class="card span-2 is-interactive">
+      <div class="card-head">
+        <span class="card-label">{% include icon.html name="sparkle-fill" %}最新文章</span>
+        <time class="tile-date" datetime="{{ latest.date | date_to_xmlschema }}">{{ latest.date | date: "%Y.%m.%d" }}</time>
+      </div>
+      <h2 class="feature-title"><a class="stretched" href="{{ latest.url | relative_url }}" style="color: inherit">{{ latest.title | escape }}</a></h2>
+      <p class="tile-desc">{{ latest.description | default: latest.excerpt | strip_html | strip_newlines | truncate: 120 }}</p>
+      <div class="tile-meta">
+        <span>{% include icon.html name="clock" %}{% include reading-time.html content=latest.content %} 分钟阅读</span>
+        <span class="card-arrow">{% include icon.html name="arrow-up-right" %}</span>
+      </div>
+    </article>
+    {%- endif -%}
+
+    <!-- 数据：1×1 × 2 -->
+    <section class="card stat-card" aria-label="文章数量">
+      <span class="chip-icon tone-1">{% include icon.html name="flame" %}</span>
+      <div>
+        <span class="stat-number">{{ site.posts | size }}<span class="stat-unit">篇</span></span>
+        <p class="stat-caption">{{ year }} 年写了 {{ year_count }} 篇</p>
+      </div>
+    </section>
+
+    <section class="card stat-card" aria-label="总字数">
+      <span class="chip-icon tone-2">{% include icon.html name="pencil" %}</span>
+      <div>
+        {%- if total_chars >= 10000 -%}
+        <span class="stat-number">{{ total_chars | divided_by: 10000.0 | round: 1 }}<span class="stat-unit">万字</span></span>
+        {%- else -%}
+        <span class="stat-number">{{ total_chars }}<span class="stat-unit">字</span></span>
+        {%- endif -%}
+        <p class="stat-caption">累计写下的文字</p>
+      </div>
+    </section>
+
+    <!-- 写作热力图：2×1 -->
+    <section class="card span-2 heat-card" aria-labelledby="heat-title">
+      <div class="card-head">
+        <h2 class="card-title" id="heat-title" style="margin: 0">写作热力图</h2>
+        <div class="contrib-legend" aria-hidden="true">
+          <span>少</span>
+          <i class="contrib-cell" data-level="0"></i>
+          <i class="contrib-cell" data-level="2"></i>
+          <i class="contrib-cell" data-level="3"></i>
+          <i class="contrib-cell" data-level="4"></i>
+          <span>多</span>
+        </div>
+      </div>
+      <div class="heat-wrap">
+        <div class="contrib-graph" data-contrib data-fit></div>
+      </div>
+      <p class="stat-caption" style="margin-top: auto; padding-top: 12px">最近 <span data-contrib-weeks>—</span> 周发布了 <strong data-contrib-total>0</strong> 篇</p>
+      <script type="application/json" id="contrib-data">
+        [{%- for p in site.posts -%}{"d":"{{ p.date | date: '%Y-%m-%d' }}","t":{{ p.title | jsonify }},"u":{{ p.url | relative_url | jsonify }}}{%- unless forloop.last -%},{%- endunless -%}{%- endfor -%}]
+      </script>
+    </section>
+
+    <!-- 最近文章列表：2×2 -->
+    <section class="card span-2 row-2 list-card" aria-labelledby="recent-title">
+      <div class="card-head">
+        <h2 class="card-title" id="recent-title" style="margin: 0">最近文章</h2>
+        <a class="card-label" href="{{ '/archive/' | relative_url }}">全部 {% include icon.html name="arrow-right" %}</a>
+      </div>
+      <ol>
+        {%- assign n = site.home_posts | default: 5 -%}
+        {%- for p in site.posts limit: n -%}
+        <li>
+          <a class="list-row" href="{{ p.url | relative_url }}">
+            <span class="list-row-title">{{ p.title | escape }}</span>
+            <time datetime="{{ p.date | date_to_xmlschema }}">{{ p.date | date: "%m.%d" }}</time>
+            {% include icon.html name="arrow-right" %}
+          </a>
+        </li>
+        {%- endfor -%}
+      </ol>
+    </section>
+
+    <!-- 语录：1×1 渐变 -->
+    {%- if site.quote.text -%}
+    <figure class="card tone-bg tone-1 quote-card" style="margin: 0">
+      <span class="quote-mark" aria-hidden="true">“</span>
+      <blockquote>{{ site.quote.text }}</blockquote>
+      <figcaption>—— {{ site.quote.author }}</figcaption>
+    </figure>
+    {%- endif -%}
+
+    <!-- 社交：1×1 -->
+    <section class="card" aria-labelledby="social-title">
+      <h2 class="card-title" id="social-title">找到我</h2>
+      <div class="social-grid">
+        {%- if site.github_username and site.github_username != "" -%}
+        <a href="https://github.com/{{ site.github_username }}" aria-label="GitHub" title="GitHub" rel="me">{% include icon.html name="mark-github" %}</a>
+        {%- endif -%}
+        {%- if a.email and a.email != "" -%}
+        <a href="mailto:{{ a.email }}" aria-label="发邮件" title="发邮件">{% include icon.html name="mail" %}</a>
+        {%- endif -%}
+        <a href="{{ '/feed.xml' | relative_url }}" aria-label="RSS 订阅" title="RSS 订阅">{% include icon.html name="rss" %}</a>
+        {%- if a.website and a.website != "" -%}
+        <a href="{{ a.website }}" aria-label="个人网站" title="个人网站" rel="me">{% include icon.html name="link" %}</a>
+        {%- else -%}
+        <a href="{{ '/about/' | relative_url }}" aria-label="关于我" title="关于我">{% include icon.html name="person" %}</a>
+        {%- endif -%}
+      </div>
+    </section>
+
+    <!-- 精选：优先取置顶文章（排除已在「最新文章」出现的），没有就用第二新的文章 -->
+    {%- assign featured = nil -%}
+    {%- assign pinned = site.posts | where: "pinned", true -%}
+    {%- for p in pinned -%}
+      {%- if p.url != latest.url -%}{%- assign featured = p -%}{%- break -%}{%- endif -%}
+    {%- endfor -%}
+    {%- unless featured -%}{%- assign featured = site.posts[1] -%}{%- endunless -%}
+    {%- if featured -%}
+      {%- include bento/post-tile.html post=featured size="wide" tone=3 -%}
+    {%- endif -%}
+
+    <!-- 正在做：1×1 -->
+    {%- if site.now.size > 0 -%}
+    <section class="card" aria-labelledby="now-title">
+      <div class="card-head">
+        <h2 class="card-title" id="now-title" style="margin: 0">正在做</h2>
+        <span class="chip-icon tone-2">{% include icon.html name="pulse" %}</span>
+      </div>
+      <ul class="now-list">
+        {%- for item in site.now -%}<li>{{ item }}</li>{%- endfor -%}
+      </ul>
+    </section>
+    {%- endif -%}
+
+    <!-- 去归档：1×1 渐变 -->
+    <a class="card tone-bg tone-2 is-interactive cta-card" href="{{ '/archive/' | relative_url }}">
+      <span class="chip-icon">{% include icon.html name="archive" %}</span>
+      <div>
+        <p class="feature-title" style="margin: 0">浏览全部文章</p>
+        <span class="tile-meta" style="padding-top: 8px">按时间、标签筛选 <span class="card-arrow">{% include icon.html name="arrow-up-right" %}</span></span>
+      </div>
+    </a>
+
+    <!-- 标签云：通栏 -->
+    <section class="card span-4 tag-cloud-card" style="min-height: 0" aria-labelledby="tags-title">
+      <div class="card-head">
+        <h2 class="card-title" id="tags-title" style="margin: 0">标签</h2>
+        <a class="card-label" href="{{ '/tags/' | relative_url }}">{{ site.tags | size }} 个 {% include icon.html name="arrow-right" %}</a>
+      </div>
+      <div class="pill-list">
+        {%- assign tags = site.tags | sort -%}
+        {%- for tag in tags -%}
+        <a class="pill" href="{{ '/tags/' | relative_url }}#{{ tag[0] | slugify }}">#{{ tag[0] }}<span class="count">{{ tag[1] | size }}</span></a>
+        {%- endfor -%}
+      </div>
+    </section>
+
+  </div>
+</div>

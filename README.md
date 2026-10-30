@@ -1,6 +1,15 @@
-# Bento Blog
+# fenglimg 的博客
 
-一个 Bento Grid（便当盒）风格的 Jekyll 博客主题，视觉规范来自 [StyleKit · Bento Grid](https://www.stylekit.top/zh/styles/bento-grid)。
+一个支持两种风格切换的 Jekyll 博客主题：
+
+- **Bento**（默认）：便当盒卡片网格，视觉规范来自 [StyleKit · Bento Grid](https://www.stylekit.top/zh/styles/bento-grid)
+- **GitHub**：仿 GitHub 界面，视觉规范来自 [StyleKit · GitHub Style](https://www.stylekit.top/zh/styles/github-style)
+
+访客点顶栏的画笔按钮即可切换，选择会被记住；网址后加 `?style=github` 或 `?style=bento` 可以直接指定。默认风格在 `_config.yml` 的 `default_style` 里改。
+
+### 风格切换的原理
+
+每个页面在构建时同时生成两套结构（`_includes/bento/` 与 `_includes/gh/`）。`_includes/head.html` 在首帧前根据访客的选择只加载对应的样式表（`bento.css` / `github.css`），`main.js` 加载后移除另一套结构，因此页面里始终只有一份内容。
 
 ## 特性
 
@@ -34,11 +43,11 @@ bundle exec jekyll serve --livereload
 | --- | --- |
 | 站点标题、作者信息、头像 | `_config.yml` |
 | 首页「正在做」「语录」卡片 | `_config.yml` 的 `now`、`quote` |
-| 首页卡片排列 | `_layouts/home.html` |
+| 首页卡片排列 | `_includes/bento/views/home.html`、`_includes/gh/views/home.html` |
 | 关于页 | `about.md` |
 | 顶部导航 | `_config.yml` 的 `nav` |
 | 评论 | `_config.yml` 的 `giscus` |
-| 颜色等设计令牌 | `assets/css/bento.css` 顶部 `:root` |
+| 颜色等设计令牌 | `assets/css/bento.css`、`assets/css/github.css` 顶部 `:root` |
 
 ## 写文章
 

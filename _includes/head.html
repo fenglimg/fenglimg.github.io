@@ -7,14 +7,37 @@
   {%- seo -%}
   {%- feed_meta -%}
   <link rel="icon" href="{{ site.author.avatar | default: '/assets/img/avatar.svg' | relative_url }}">
+  <style>
+    .style-root { display: contents; }
+    [data-style="bento"] .style-github,
+    [data-style="github"] .style-bento { display: none !important; }
+  </style>
   <script>
-    /* 在首帧前写入主题，避免闪烁 */
+    /* 首帧前决定主题（浅/深）和风格（Bento / GitHub），只加载对应的样式表，避免闪烁。
+       优先级：网址 ?style= 参数 > 上次的选择 > _config.yml 的 default_style */
     (function () {
+      var d = document.documentElement;
       var t = "auto";
-      try { t = localStorage.getItem("theme") || "auto"; } catch (e) {}
-      document.documentElement.setAttribute("data-theme", t);
+      var s = "{{ site.default_style | default: 'bento' }}";
+      try {
+        t = localStorage.getItem("theme") || t;
+        s = localStorage.getItem("style") || s;
+      } catch (e) {}
+      var m = /[?&]style=(bento|github)\b/.exec(location.search);
+      if (m) {
+        s = m[1];
+        try { localStorage.setItem("style", s); } catch (e) {}
+      }
+      if (s !== "github") s = "bento";
+      d.setAttribute("data-theme", t);
+      d.setAttribute("data-style", s);
+      var css = s === "github" ? "{{ '/assets/css/github.css' | relative_url }}" : "{{ '/assets/css/bento.css' | relative_url }}";
+      document.write('<link rel="stylesheet" href="' + css + '">');
     })();
   </script>
-  <link rel="stylesheet" href="{{ '/assets/css/bento.css' | relative_url }}">
+  <noscript>
+    <link rel="stylesheet" href="{{ '/assets/css/bento.css' | relative_url }}">
+    <style>.style-github { display: none !important; }</style>
+  </noscript>
   <script src="{{ '/assets/js/main.js' | relative_url }}" defer></script>
 </head>

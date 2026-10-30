@@ -2,43 +2,5 @@
 layout: default
 title: 文章
 permalink: /archive/
+view: archive
 ---
-<div class="container" data-filter-scope>
-  <div class="bento">
-    <section class="card span-2 filter-card">
-      <h1 class="feature-title" style="margin: 0; font-size: 30px">全部文章</h1>
-      <label class="sr-only" for="archive-filter">按标题或标签筛选文章</label>
-      <div class="input-icon">
-        {% include icon.html name="search" %}
-        <input class="input" id="archive-filter" type="search" placeholder="按标题或标签筛选…" data-filter-input autocomplete="off">
-      </div>
-    </section>
-    <div class="card stat-card">
-      <span class="chip-icon tone-0">{% include icon.html name="note" %}</span>
-      <div>
-        <span class="stat-number">{{ site.posts | size }}<span class="stat-unit">篇</span></span>
-        <p class="stat-caption">按时间倒序排列</p>
-      </div>
-    </div>
-    <a class="card stat-card is-interactive" href="{{ '/tags/' | relative_url }}" style="color: inherit">
-      <span class="chip-icon tone-3">{% include icon.html name="hash" %}</span>
-      <div>
-        <span class="stat-number">{{ site.tags | size }}<span class="stat-unit">个标签</span></span>
-        <p class="stat-caption">按标签浏览 →</p>
-      </div>
-    </a>
-  </div>
-
-  <div class="bento">
-    {%- assign n = site.posts | size -%}
-    {%- for p in site.posts -%}
-      {%- include bento-size.html i=forloop.index0 n=n -%}
-      {%- assign t = forloop.index0 | modulo: 4 -%}
-      {%- include post-tile.html post=p size=bento_size tone=t -%}
-    {%- endfor -%}
-    <div class="card span-4 filter-empty" role="status" style="align-items: center; justify-content: center; text-align: center">
-      <span class="chip-icon tone-1">{% include icon.html name="search" %}</span>
-      <p class="stat-caption">没有找到匹配的文章，换个关键词试试。</p>
-    </div>
-  </div>
-</div>

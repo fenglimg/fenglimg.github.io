@@ -1,0 +1,24 @@
+{%- assign p = include.post -%}
+<li class="post-item">
+  <div class="post-item-head">
+    <h3 class="post-item-title">
+      <a href="{{ p.url | relative_url }}">{{ p.title | escape }}</a>
+    </h3>
+    {%- if p.pinned -%}<span class="Label">置顶</span>{%- endif -%}
+  </div>
+  {%- assign desc = p.description | default: p.excerpt | strip_html | strip_newlines | truncate: 120 -%}
+  {%- if desc != "" -%}
+  <p class="post-item-desc">{{ desc }}</p>
+  {%- endif -%}
+  {%- if p.tags.size > 0 -%}
+  <div class="topic-list">
+    {%- for tag in p.tags -%}
+    <a class="topic-tag" href="{{ '/tags/' | relative_url }}#{{ tag | slugify }}">{{ tag }}</a>
+    {%- endfor -%}
+  </div>
+  {%- endif -%}
+  <div class="post-item-meta">
+    <span>{% include icon.html name="calendar" %}<time datetime="{{ p.date | date_to_xmlschema }}">{{ p.date | date: "%Y-%m-%d" }}</time></span>
+    <span>{% include icon.html name="clock" %}{% include reading-time.html content=p.content %} 分钟阅读</span>
+  </div>
+</li>

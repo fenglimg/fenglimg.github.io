@@ -1,0 +1,61 @@
+<a class="skip-link" href="#main">跳到正文</a>
+<header class="site-header">
+  <div class="container-xl header-inner">
+    <a class="header-logo" href="{{ '/' | relative_url }}">
+      <img class="avatar" src="{{ site.author.avatar | relative_url }}" alt="" width="32" height="32">
+      <span class="header-title">{{ site.title }}</span>
+    </a>
+
+    <form class="header-search" action="{{ '/search/' | relative_url }}" role="search">
+      <label class="sr-only" for="header-q">搜索文章</label>
+      {% include icon.html name="search" %}
+      <input id="header-q" name="q" type="search" placeholder="搜索文章…" autocomplete="off">
+      <kbd class="header-search-key" aria-hidden="true">/</kbd>
+    </form>
+
+    <div class="header-actions">
+      <a class="header-btn header-btn-search" href="{{ '/search/' | relative_url }}" aria-label="搜索">
+        {% include icon.html name="search" %}
+      </a>
+      <button class="header-btn" type="button" data-style-toggle="bento" aria-label="切换到 Bento 风格" title="切换到 Bento 风格">
+        {% include icon.html name="paintbrush" %}
+      </button>
+      <button class="header-btn" type="button" data-theme-toggle aria-label="切换主题" title="切换主题">
+        <span class="theme-icon theme-icon-auto">{% include icon.html name="device-desktop" %}</span>
+        <span class="theme-icon theme-icon-light">{% include icon.html name="sun" %}</span>
+        <span class="theme-icon theme-icon-dark">{% include icon.html name="moon" %}</span>
+      </button>
+      <a class="header-btn" href="{{ '/feed.xml' | relative_url }}" aria-label="RSS 订阅" title="RSS 订阅">
+        {% include icon.html name="rss" %}
+      </a>
+      {%- if site.github_username != "" and site.github_username -%}
+      <a class="header-btn" href="https://github.com/{{ site.github_username }}" aria-label="GitHub 主页" title="GitHub 主页" rel="me">
+        {% include icon.html name="mark-github" %}
+      </a>
+      {%- endif -%}
+    </div>
+  </div>
+</header>
+
+<nav class="underline-nav" aria-label="主导航">
+  <div class="container-xl underline-nav-body">
+    {%- for item in site.nav -%}
+      {%- assign current = false -%}
+      {%- if item.url == "/" -%}
+        {%- if page.url == "/" or page.url == "/index.html" -%}{%- assign current = true -%}{%- endif -%}
+      {%- elsif page.url contains item.url -%}
+        {%- assign current = true -%}
+      {%- endif -%}
+      {%- if item.url == "/archive/" and page.layout == "post" -%}{%- assign current = true -%}{%- endif -%}
+      <a class="underline-nav-item" href="{{ item.url | relative_url }}"{% if current %} aria-current="page"{% endif %}>
+        {% include icon.html name=item.icon %}
+        <span>{{ item.title }}</span>
+        {%- if item.counter == "posts" -%}
+          <span class="counter">{{ site.posts | size }}</span>
+        {%- elsif item.counter == "tags" -%}
+          <span class="counter">{{ site.tags | size }}</span>
+        {%- endif -%}
+      </a>
+    {%- endfor -%}
+  </div>
+</nav>

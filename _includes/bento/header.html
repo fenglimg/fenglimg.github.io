@@ -24,6 +24,9 @@
         <a class="icon-btn" href="{{ '/search/' | relative_url }}" aria-label="搜索（快捷键 /）" title="搜索（快捷键 /）">
           {% include icon.html name="search" %}
         </a>
+        <button class="icon-btn" type="button" data-style-toggle="github" aria-label="切换到 GitHub 风格" title="切换到 GitHub 风格">
+          {% include icon.html name="paintbrush" %}
+        </button>
         <button class="icon-btn" type="button" data-theme-toggle aria-label="切换主题" title="切换主题">
           <span class="theme-icon theme-icon-auto">{% include icon.html name="device-desktop" %}</span>
           <span class="theme-icon theme-icon-light">{% include icon.html name="sun" %}</span>

@@ -1,7 +1,7 @@
 ---
 layout: null
 ---
-/* Bento Blog —— 交互脚本（无依赖） */
+/* 博客交互脚本（无依赖），Bento 与 GitHub 两种风格共用 */
 (function () {
   "use strict";
 
@@ -65,6 +65,27 @@ layout: null
       btn.innerHTML = original;
       btn.classList.remove("is-copied");
     }, 1500);
+  }
+
+  /* ---------- 风格切换：Bento ⇄ GitHub ---------- */
+  function currentStyle() {
+    return document.documentElement.getAttribute("data-style") === "github" ? "github" : "bento";
+  }
+
+  function initStyle() {
+    var active = currentStyle();
+    /* 页面里同时有两套结构，移除不用的那套，避免重复的 id 和内容 */
+    $$("[data-style-root]").forEach(function (el) {
+      if (el.getAttribute("data-style-root") !== active) el.remove();
+    });
+    $$("[data-style-toggle]").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        try { localStorage.setItem("style", btn.getAttribute("data-style-toggle")); } catch (e) {}
+        var url = new URL(location.href);
+        url.searchParams.delete("style");
+        location.replace(url.toString());
+      });
+    });
   }
 
   /* ---------- 主题切换：跟随系统 → 浅色 → 深色 ---------- */
@@ -244,8 +265,8 @@ layout: null
     var byDay = {};
     posts.forEach(function (p) { (byDay[p.d] = byDay[p.d] || []).push(p); });
 
-    /* 每列（一周）宽 16px：12px 方块 + 4px 间距；data-fit 时按卡片宽度决定显示几周 */
-    var COL = 16;
+    /* 每列（一周）的宽度 = 方块 + 间距：Bento 16px，GitHub 13px（data-col）；data-fit 时按卡片宽度决定显示几周 */
+    var COL = parseInt(root.getAttribute("data-col"), 10) || 16;
     var weeks = 53;
     if (root.hasAttribute("data-fit") && root.parentElement) {
       weeks = Math.max(8, Math.min(53, Math.floor((root.parentElement.clientWidth - 24 + 4) / COL)));
@@ -408,7 +429,18 @@ layout: null
       }).filter(Boolean).sort(function (a, b) { return b.score - a.score; });
 
       status.textContent = hits.length ? "找到 " + hits.length + " 篇相关文章" : "没有找到与“" + q + "”相关的文章";
-      results.innerHTML = hits.map(function (h, i) {
+      results.innerHTML = currentStyle() === "github" ? hits.map(function (h) {
+        var p = h.p;
+        var tags = (p.tags || []).map(function (t) {
+          return '<span class="topic-tag">' + highlight(t, terms) + "</span>";
+        }).join("");
+        return '<li class="post-item">' +
+          '<div class="post-item-head"><h3 class="post-item-title"><a href="' + escapeHtml(p.url) + '">' + highlight(p.title, terms) + "</a></h3></div>" +
+          '<p class="post-item-desc">' + highlight(snippet(p.content || p.desc || "", terms), terms) + "</p>" +
+          (tags ? '<div class="topic-list">' + tags + "</div>" : "") +
+          '<div class="post-item-meta"><span>' + ICONS.calendar + escapeHtml(p.date) + "</span></div>" +
+          "</li>";
+      }).join("") : hits.map(function (h, i) {
         var p = h.p;
         var tone = i % 4;
         var tags = (p.tags || []).map(function (t) {
@@ -445,6 +477,7 @@ layout: null
   }
 
   document.addEventListener("DOMContentLoaded", function () {
+    initStyle();
     initTheme();
     initShortcuts();
     var body = $("[data-post-body]");

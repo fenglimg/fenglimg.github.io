@@ -2,7 +2,7 @@
   计算第 i 张卡片（共 n 张）在 4 列网格中的尺寸，结果写入变量 bento_size。
   规则：前 4 张拼成两行（大卡 + 两张小卡 + 一张中卡），之后每 3 张一行（中卡 + 两张小卡），
   最后一行不满时把剩下的卡片拉宽补齐，保证网格不留空。
-  用法：{% include bento-size.html i=forloop.index0 n=total %}
+  用法：{% include bento/bento-size.html i=forloop.index0 n=total %}
 {%- endcomment -%}
 {%- assign _i = include.i -%}
 {%- assign _n = include.n -%}

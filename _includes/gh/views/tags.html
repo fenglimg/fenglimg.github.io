@@ -1,0 +1,45 @@
+{%- assign tags = site.tags | sort -%}
+<div class="container-lg">
+  <header class="page-head">
+    <div>
+      <h1 class="page-title">标签</h1>
+      <p class="page-subtitle">共 {{ tags | size }} 个标签</p>
+    </div>
+  </header>
+
+  <nav class="tag-cloud" aria-label="全部标签">
+    <div class="topic-list">
+      {%- for tag in tags -%}
+      <a class="topic-tag" href="#{{ tag[0] | slugify }}">{{ tag[0] }}<span class="counter">{{ tag[1] | size }}</span></a>
+      {%- endfor -%}
+    </div>
+  </nav>
+
+  {%- for tag in tags -%}
+  <section class="Box tag-section" id="{{ tag[0] | slugify }}">
+    <div class="Box-header">
+      <h2>{% include icon.html name="tag" %}{{ tag[0] }}</h2>
+      <span class="counter">{{ tag[1] | size }}</span>
+    </div>
+    <ol class="commit-list">
+      {%- for p in tag[1] -%}
+      <li class="commit-row">
+        <div class="commit-main">
+          <a class="commit-title" href="{{ p.url | relative_url }}">{{ p.title | escape }}</a>
+          <div class="commit-meta">
+            <span>{% include icon.html name="calendar" %} {{ p.date | date: "%Y-%m-%d" }}</span>
+          </div>
+        </div>
+      </li>
+      {%- endfor -%}
+    </ol>
+  </section>
+  {%- endfor -%}
+
+  {%- if tags.size == 0 -%}
+  <div class="Box blankslate">
+    {% include icon.html name="tag" %}
+    <p>还没有标签。在文章头部写上 <code>tags: [标签1, 标签2]</code> 就会出现在这里。</p>
+  </div>
+  {%- endif -%}
+</div>

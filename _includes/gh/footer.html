@@ -1,0 +1,15 @@
+<footer class="site-footer">
+  <div class="container-xl footer-inner">
+    <div class="footer-left">
+      {% include icon.html name="mark-github" %}
+      <span>&copy; {{ site.time | date: "%Y" }} {{ site.author.name }}</span>
+    </div>
+    <ul class="footer-links">
+      {%- for item in site.nav -%}
+      <li><a href="{{ item.url | relative_url }}">{{ item.title }}</a></li>
+      {%- endfor -%}
+      <li><a href="{{ '/feed.xml' | relative_url }}">RSS</a></li>
+    </ul>
+    <p class="footer-note">由 Jekyll 构建 · 部署于 GitHub Pages</p>
+  </div>
+</footer>

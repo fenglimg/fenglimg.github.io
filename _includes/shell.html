@@ -1,0 +1,20 @@
+{%- comment -%}
+  同一页面同时渲染两套风格（Bento / GitHub），由 head.html 中的脚本决定显示哪一套，
+  main.js 在加载后移除另一套，保证页面里只有一份内容。
+  视图名取 page.view，没有时用 page.layout（home / post / page）。
+{%- endcomment -%}
+{%- assign view = page.view | default: page.layout | default: "page" -%}
+<div class="style-root style-bento" data-style-root="bento">
+  {%- include bento/header.html -%}
+  <main id="main" class="site-main">
+    {% include bento/views/{{ view }}.html %}
+  </main>
+  {%- include bento/footer.html -%}
+</div>
+<div class="style-root style-github" data-style-root="github">
+  {%- include gh/header.html -%}
+  <main id="main" class="site-main">
+    {% include gh/views/{{ view }}.html %}
+  </main>
+  {%- include gh/footer.html -%}
+</div>
